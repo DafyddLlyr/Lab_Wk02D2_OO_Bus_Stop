@@ -14,10 +14,15 @@
 
 # Add an 'empty' method to remove all of the passengers - this might be used when the bus reaches its destination, or if the bus breaks down. It should remove all of the passengers from the array.
 
+# Now imagine that our bus is travelling along the route. For now we will imagine that there is only one bus that goes on this route, so every passenger waiting at each stop wants to get on the bus.
+
+# Try writing a method that the bus would call, to collect all of the passengers from a stop. This might look like bus.pick_up_from_stop(stop1). This should take all of the passengers waiting in line at the stop, and put them inside of the bus. So the stop will now have nobody in the queue, and the number of people on the bus will increase by however many people the stop had at it.
+
 require("minitest/autorun")
 require("minitest/rg")
 require_relative("../bus")
 require_relative("../person")
+require_relative("../bus_stop")
 
 class BusTest < MiniTest::Test
 
@@ -26,6 +31,7 @@ class BusTest < MiniTest::Test
     @passenger_1 = Person.new("Myfanwy", 79)
     @passenger_2 = Person.new("Einir", 91)
     @passenger_3 = Person.new("Heulwen", 78)
+    @bus_stop = BusStop.new("Machynlleth")
   end
 
   def test_route_number
@@ -69,5 +75,15 @@ class BusTest < MiniTest::Test
     @bus.empty
     assert_equal([], @bus.passenger_list)
   end
+
+  def test_pick_up_from_stop
+    @bus_stop.add_to_queue(@passenger_1)
+    @bus_stop.add_to_queue(@passenger_2)
+    @bus_stop.add_to_queue(@passenger_3)
+    @bus.pick_up_from_stop(@bus_stop)
+    assert_equal([], @bus_stop.queue)
+    assert_equal([@passenger_1, @passenger_2, @passenger_3], @bus.passenger_list)
+  end
+
 
 end
